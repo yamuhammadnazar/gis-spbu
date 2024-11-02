@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Read SPBU</title>
+    <link
+      rel="stylesheet"
+      href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+      integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY="
+      crossorigin=""
+    />
+
+    <script
+      src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+      integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
+      crossorigin=""
+    ></script>
+
+    <style>
+      #peta {
+        height: 420px;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="peta"></div>
+    <form action="create.php">
+      <label for="inputName">SPBU Name</label>
+      <input type="text" id="inputName" name="inputName" />
+      <label for="inputAddress">SPBU Addresss</label>
+      <input type="text" id="inputAddress" name="inputAddress" />
+      <label for="inputLatitude">Latitude</label>
+      <input type="text" id="inputLatitude" name="inputLatitude" readonly />
+      <label for="inputLongitude">Longitude</label>
+      <input type="text" id="inputLongitude" name="inputLongitude" readonly />
+      <button type="submit">Submit</button>
+    </form>
+
+    <script>
+      var map = L.map("peta").setView(
+        [-0.02543844487523898, 109.33669538729531],
+        13
+      );
+      L.tileLayer(
+        "https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png",
+        {
+          minZoom: 5,
+          maxZoom: 300,
+        }
+      ).addTo(map);
+
+      var lat = document.getElementById("inputLatitude");
+      var lng = document.getElementById("inputLongitude");
+      var marker;
+      map.on("click", function (e) {
+        if (marker) {
+          map.removeLayer(marker);
+        }
+        marker = L.marker(e.latlng).addTo(map);
+        var latFormMap = e.latlng.lat;
+        var lngFormMap = e.latlng.lng;
+        lat.value = latFormMap;
+        lng.value = lngFormMap;
+      });
+    </script>
+  </body>
+</html>

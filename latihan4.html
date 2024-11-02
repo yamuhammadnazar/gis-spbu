@@ -1,0 +1,122 @@
+
+
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SPBU Locator</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="">
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+  <style>
+    #peta {
+      height: 400px;
+    }
+    #sidebar {
+      height: 100vh;
+      background-color: #f8f9fa;
+      border-right: 1px solid #ddd;
+      padding-top: 1rem;
+    }
+    .menu-item {
+      cursor: pointer;
+    }
+  </style>
+  
+</head>
+<body>
+  <div class="container-fluid">
+    <div class="row">
+      <!-- Sidebar -->
+      <div id="sidebar" class="col-md-3 col-lg-2 p-3">
+        <h5 class="mb-4">Menu</h5>
+        <ul class="nav flex-column">
+          <li class="nav-item mb-2">
+            <a class="nav-link active menu-item" id="menuReadAll">Read All</a>
+          </li>
+          <li class="nav-item mb-2">
+            <a class="nav-link menu-item" id="menuCreate">Create</a>
+          </li>
+        </ul>
+      </div>
+
+      <!-- Content Area -->
+      <div class="col-md-9 col-lg-10 p-4">
+        <!-- Read All Section (Map) -->
+        <div id="readAllSection" class="card shadow-sm">
+          <div class="card-header bg-primary text-white">
+            <h5 class="card-title mb-0">Read All SPBU</h5>
+          </div>
+          <div class="card-body">
+            <div id="peta"></div>
+          </div>
+        </div>
+
+        <!-- Create Section (Form) -->
+        <div id="createSection" class="card shadow-sm d-none">
+          <div class="card-header bg-success text-white">
+            <h5 class="card-title mb-0">Create SPBU</h5>
+          </div>
+          <div class="card-body">
+            <form action="read.php">
+              <div class="mb-3">
+                <label for="inputName" class="form-label">SPBU Name</label>
+                <input type="text" id="inputName" name="inputName" class="form-control" required>
+              </div>
+              <div class="mb-3">
+                <label for="inputAddress" class="form-label">SPBU Address</label>
+                <input type="text" id="inputAddress" name="inputAddress" class="form-control" required>
+              </div>
+              <div class="mb-3">
+                <label for="inputLatitude" class="form-label">Latitude</label>
+                <input type="text" id="inputLatitude" name="inputLatitude" class="form-control" readonly>
+              </div>
+              <div class="mb-3">
+                <label for="inputLongitude" class="form-label">Longitude</label>
+                <input type="text" id="inputLongitude" name="inputLongitude" class="form-control" readonly>
+              </div>
+              <button type="submit" class="btn btn-success w-100">Submit</button>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+  <script>
+    // Initialize map in the "Read All" section
+    var map = L.map("peta").setView([-0.02543844487523898, 109.33669538729531], 13);
+    L.tileLayer("https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png", {
+      minZoom: 5,
+      maxZoom: 18,
+    }).addTo(map);
+
+    // Marker setup
+    var lat = document.getElementById("inputLatitude");
+    var lng = document.getElementById("inputLongitude");
+    var marker;
+    map.on("click", function (e) {
+      if (marker) {
+        map.removeLayer(marker);
+      }
+      marker = L.marker(e.latlng).addTo(map);
+      lat.value = e.latlng.lat;
+      lng.value = e.latlng.lng;
+    });
+
+    // Toggle between "Read All" and "Create" sections
+    document.getElementById("menuReadAll").addEventListener("click", function() {
+      document.getElementById("readAllSection").classList.remove("d-none");
+      document.getElementById("createSection").classList.add("d-none");
+    });
+
+    document.getElementById("menuCreate").addEventListener("click", function() {
+      document.getElementById("createSection").classList.remove("d-none");
+      document.getElementById("readAllSection").classList.add("d-none");
+    });
+  </script>
+</body>
+</html>
