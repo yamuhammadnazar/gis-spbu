@@ -6,7 +6,7 @@ $connection = mysqli_connect(
     "root",
     "",
     "spbu_db",
-    "3308"
+    "3306"
 );
 
 function send_query($query) {
